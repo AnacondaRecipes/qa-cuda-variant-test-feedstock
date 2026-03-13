@@ -1,0 +1,31 @@
+{% set name = "qa-cuda-variant-test" %}
+{% set version = "0.1.0" %}
+
+package:
+  name: {{ name }}
+  version: {{ version }}
+
+source:
+  path: ..
+
+build:
+  number: 0
+  string: cuda{{ cuda_compiler_version }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}
+
+requirements:
+  build:
+    - {{ compiler('c') }}
+    - cuda-version {{ cuda_compiler_version }}
+  host:
+    - cuda-version {{ cuda_compiler_version }}
+  run:
+    - cuda-version {{ cuda_compiler_version }}
+
+test:
+  commands:
+    - echo "Built with CUDA {{ cuda_compiler_version }}"
+
+about:
+  home: https://example.com
+  summary: "Dummy CUDA variant test package"
+  license: MIT
