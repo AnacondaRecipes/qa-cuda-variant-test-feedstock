@@ -9,7 +9,7 @@ source:
   path: ..
 
 build:
-  number: 0
+  number: 377
   string: cuda{{ cuda_compiler_version }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}
 
 requirements:
