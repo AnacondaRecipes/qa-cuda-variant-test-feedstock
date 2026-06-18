@@ -13,7 +13,7 @@ package:
 build:
   number: 0
   string: cuda{{ cuda_compiler_version }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}
-  script: build.sh
+  # build.sh is run automatically by conda-build; do not also set build/script.
   # CUDA builds are platform-specific; never noarch.
   skip: true  # [not linux]
 
