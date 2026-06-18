@@ -1,7 +1,16 @@
+# cuda_compiler selects which compiler {{ compiler('cuda') }} resolves to.
+# cuda-nvcc is the conda-forge/AnacondaRecipes CUDA compiler package that
+# provides nvcc. Zipped with cuda_compiler_version so each variant pairs the
+# right nvcc with the right CUDA version (12 / 13).
+cuda_compiler:
+  - cuda-nvcc
+  - cuda-nvcc
+
 cuda_compiler_version:
-  - 12
-  - 13
+  - "12"
+  - "13"
 
 zip_keys:
-  - 
+  -
+    - cuda_compiler
     - cuda_compiler_version
