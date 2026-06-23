@@ -5,17 +5,25 @@ package:
   name: {{ name }}
   version: {{ version }}
 
-source:
-  path: ..
+# No `source:` section: the only source is hello.cu, which lives in the recipe
+# dir and is referenced via $RECIPE_DIR in build.sh. This avoids the
+# `source: path: ..` self-copy that fails when croot is nested under the work
+# root (e.g. /build/croot inside the Docker build container).
 
 build:
   number: 0
   string: cuda{{ cuda_compiler_version }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}
+  # build.sh is run automatically by conda-build; do not also set build/script.
+  # CUDA builds are platform-specific; never noarch.
+  skip: true  # [not linux]
 
 requirements:
   build:
     - {{ compiler('c') }}
-    - cuda-version {{ cuda_compiler_version }}
+    - {{ compiler('cxx') }}
+    # Pulls nvcc / the CUDA toolkit into the build env. This is what makes the
+    # package a *real* CUDA build (requires the CUDA-toolkit image + a GPU).
+    - {{ compiler('cuda') }}
   host:
     - cuda-version {{ cuda_compiler_version }}
   run:
@@ -23,9 +31,11 @@ requirements:
 
 test:
   commands:
-    - echo "Built with CUDA {{ cuda_compiler_version }}"
+    # Runs the compiled CUDA binary; on a GPU worker this confirms the GPU is
+    # actually visible to the container (cudaGetDeviceCount > 0).
+    - qa-cuda-hello
 
 about:
   home: https://example.com
-  summary: "Dummy CUDA variant test package"
+  summary: "Minimal real CUDA test package (compiles a .cu with nvcc)"
   license: MIT
